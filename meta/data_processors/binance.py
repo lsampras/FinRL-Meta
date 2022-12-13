@@ -128,9 +128,11 @@ class Binance(_Base):
         # then you may have an error in req_params
         # r = requests.get(self.url, params=req_params)
         # print(r.text)
-        data = requests.get(self.url, params=req_params).json()
-        print("Binance Downloaded Data\n", data)
-        df = pd.DataFrame(data)
+        resp = requests.get(self.url, params=req_params)
+        if not resp.ok:
+            print("Binance data fetch failed with:\n", resp.text)
+            return None
+        df = pd.DataFrame(resp.json())
 
         if df.empty:
             return None
